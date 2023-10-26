@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1, maximum-scale=1">
+    <title>Ocean Chat</title>
+
+    <!-- Local Styles CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/desktop.css">
+    <!-- <link rel="stylesheet" href="css/tablet.css"> -->
+    <link rel="stylesheet" href="css/mobile.css">
+
+    <!-- Semantic UI -->
+    <script src="res/semantic-ui/jquery@3.4.1.js"></script>
+    <script src="res/semantic-ui/semantic.min.js"></script>
+    <link rel="stylesheet" href="res/semantic-ui/semantic.min.css">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="assets/OC-favicon-zoom.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Ocean Chat">
+    <link rel="apple-touch-icon-precomposed" href="assets/OC-favicon-zoom.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/OC-icon-transparent-notext-zoom.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <link rel="shortcut icon" href="assets/OC-icon-transparent-notext-zoom.png">
+</head>
+<body>
+    <!-- Login / Signin -->
+    <section class="prevent-select active" id="forms">
+		<div class="title">
+        	<img class="logo" src="assets/OC-icon-transparent.png" />
+			<p>La nouvelle messagerie instantanée</p>
+		</div>
+
+        <form enctype="multipart/form-data" class="ui login form active" id="login_form">
+            <h2>Connexion</h2>
+            <div class="two vertical field">
+                <div class="">
+                <label>Adresse Mail</label>
+                  <input placeholder="Adresse Mail" name="mail" id="login_mail" type="text" autocomplete="true" autofocus>
+                </div>
+
+                <div class="">
+                  <label>Mot de passe</label>
+                  <input placeholder="Mot de passe" name="password" type="password" id="login_password" autocomplete="current-password">
+                </div>
+            </div>
+
+			<input type="submit" id="login_submit" class="ui primary submit button" />
+			<div class="ui error message" id="login_error_message"></div>
+			<div class="ui success message" id="login_success_message"></div>
+			<div class="ui warning message" id="login_warning_message"></div>
+			<p>Vous n'avez pas encore de compte? <a class="signin-button">Inscrivez-vous</a></p>
+        </form>
+
+        <form enctype="multipart/form-data" class="ui signin form " id="signin_form">
+            <h2>S'inscrire</h2>
+            <div class="two vertical field">
+                <div class="">
+                  <label>Addresse Mail </label>
+                  <input placeholder="Addresse Mail" name="mail" id="signin_mail" type="email" autocomplete="true" autofocus>
+                </div>
+
+                <div class="">
+                  <label>Mot de passe </label>
+                  <input placeholder="Mot de passe" name="password_1" type="password" id="signin_password_1" autocomplete="new-password">
+                </div>
+
+                <div class="">
+                    <label>Confirmez Mot de passe </label>
+                    <input placeholder="Confirmez Mot de passe" name="password_2" type="password" id="signin_password_2" autocomplete="new-password">
+                  </div>
+            </div>
+
+            <input type="submit" id="signin_submit" class="ui primary submit button" />
+            <div class="ui error message" id="signin_error_message"></div>
+			<div class="ui success message" id="signin_success_message"></div>
+			<div class="ui warning message" id="signin_warning_message"></div>
+            <p>Vous avez déjà un compte? <a class="login-button">Connectez-vous</a></p>
+        </form>
+
+        <p class="copyright">Copyright 2023 &copy; Lupita. Tout droit reservé.<span style="position: absolute; bottom: 0; right: 0; color: darkgrey;">Ocean Chat v1.1.0 - Oct 2023</span></p>
+    </section>
+
+	<!-- L'application chat -->
+	<main id="chat-app">
+		<section id="main-bloc">
+			<aside class="left prevent-select">
+				<div class="home">
+					<div class="top">
+						<div class="user-infos" id="my-infos">
+							<div class="user-photo"></div>
+							<span class="user-name"></span>
+						</div>
+
+						<div id="by_lupita"><i class="icon circle info"></i></div>
+
+						<div class="search-bar">
+							<i class="icon search"></i>
+							<input type="search" class="search-input" id="search_input" placeholder="Trouver quelqu'un...">
+						</div>
+					</div>
+
+					<div class="bottom" id="my-users-list">
+						<template id="user_template">
+							<div class="user">
+								<div class="user-infos">
+									<div class="photo">
+										<span class="status"></span>
+									</div>
+									<div class="text">
+										<span class="name"></span>
+										<span class="last-message"></span>
+									</div>
+								</div>
+	
+								<div class="notif"></div>
+							</div>
+						</template>
+					</div>
+				</div>
+				
+				<form action="/upload" method="post" enctype="multipart/form-data" class="profile" id="profile" hidden>
+					<div class="buttons-top">
+						<div class="ui circular button icon" id="profile-button-return" style="background: transparent; color: var(--foreground-color);"><i class="icon arrow up"></i></div>
+						<div>
+							<div class="ui circular blue basic button icon edit" id="profile-button-edit">
+								<i class="icon edit"></i>
+							</div>
+							<!-- <div class="ui circular white basic button icon" id="profile-button-setting">
+								<i class="icon cog"></i>
+							</div> -->
+							<div class="ui circular red basic button icon" id="logout_button">
+								<i class="icon logout"></i>
+							</div>
+						</div>
+					</div>
+					
+					<div class="infos-bottom">
+						<div class="photo" id="photo_preview">
+							<label for="get-image" class="photo-content" id="photo_content"></label>
+							<input type="file" name="profile_photo" accept="image/*" id="get-image" onchange="previewPhoto(event)" disabled/>
+						</div>
+
+						<div class="ui form">
+							<div class="three vertical field">
+								<input type="text" name="profile_pseudo" id="profile-pseudo" placeholder="Pseudonyme" readonly />
+								<textarea type="text" name="profile_description" id="profile-description" placeholder="A propos de vous" readonly></textarea>
+							</div>
+							<input type="submit" id="profile-button-save" class="ui button green" value="Sauver" style="display: none; width: 100%; justify-content: center;">
+						</div>
+						
+					</div>
+					
+				</form>
+
+				<div class="other-profile" hidden>
+					<div class="buttons-top">
+						<div class="ui circular button icon" id="ot_profile-button-return" style="background: transparent; color: var(--foreground-color);"><i class="icon arrow up"></i></div>
+						<div></div>
+					</div>
+					
+					<div class="infos-bottom">
+						<div class="photo" id="photo_preview">
+							<label class="photo-content" id="ot_photo_content"></label>
+						</div>
+
+						<div class="ui form">
+							<div class="three vertical field">
+								<input type="text" name="profile_pseudo" id="ot_profile-pseudo" placeholder="Pseudonyme" readonly />
+								<textarea type="text" name="profile_description" id="ot_profile-description" placeholder="A propos de vous" readonly></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="settings" hidden>
+					Settings
+				</div>
+
+				<div class="about-help" hidden>
+					<style>
+						.haut {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
+							margin: 0;
+							padding-left: 1rem;
+							padding-right: 1rem;
+							/* border-bottom: 1px solid var(--border-color); */
+						}
+
+						.ui.header {
+							position: relative;
+							bottom: 1rem;
+						}
+					</style>
+
+					<div class="haut">
+						<div class="ui circular button icon" id="about_back_button" style="background: transparent; color: var(--foreground-color);"><i class="icon arrow up"></i></div>
+						<h3 class="ui header inverted">A propos de nous</h3>
+					</div>
+				</div>
+			</aside>
+
+			<aside class="right">
+				<div class="top">
+					<button class="ui circular button icon return-button" style="background: transparent; color: var(--foreground-color);"><i class="icon arrow up"></i></button>
+					<div class="prevent-select other-user-infos">
+						<div class="user-photo">
+							<span class="status"></span>
+						</div>
+						<span class="user-name"></span>
+					</div>
+				</div>
+
+				<div class="middle" id="messages_container">
+					
+					<template class="message-invite" id="message_invite">
+						<div class="mi-left">
+							<div class="sender-photo"></div>
+							<span class="datetime prevent-select"></span>
+						</div>
+						
+						<div class="content">
+							<span class="sender prevent-select"><span class="text"></span><i class="icon delete"></i></span>
+							<p class="msg"></p>
+							<img src="" alt="">
+						</div>
+					</template>
+					
+					<template class="message" id="message">
+						<div class="content">
+							<span class="sender prevent-select"><span class="text">Vous</span><i class="icon delete"></i></span>
+							<p class="msg"></p>
+							<img src="" alt="">
+						</div>
+						<span class="datetime prevent-select"></span>
+					</template>
+
+				</div>
+
+				<form action="/send_image" method="post" enctype="multipart/form-data" class="bottom">
+					<div class="images-added">
+						<label for="add_image" class="image-added-preview">
+							<div class="preview" id="image_added_preview"></div>
+							<span class="label" id="image_added_label"></span>
+						</label>
+					</div>
+
+					<div class="messages-input-functions">
+						<div class="ui icon button circular" id="toggle_emojis"><i class="icon smile"></i></div>
+						<div class="prevent-select" id="emojis_container"></div>
+						<label for="add_image" class="ui icon button circular send-image-button"><i class="icon image"></i></label>
+						<input type="file" name="add_image" accept="image/*" id="add_image" style="display: none;" onchange="added_images_preview(event)"/>
+						<textarea class="message-input" placeholder="Ecrire un message..."></textarea>
+						<button class="ui icon button green circular send-message-button"><i class="icon send"></i></button>
+					</div>
+					
+				</form>
+			</aside>
+		</section>
+	</main>
+    
+	<script src="socket.io/socket.io.js"></script>
+    <script src="src/main.js"></script>
+	<script src="src/connect.js"></script>
+	<script src="src/request.js"></script>
+	<script>
+		const previewPhoto = async (event) => {
+			var input = event.target;
+			var reader = new FileReader();
+
+			reader.onload = function () {
+				var dataURL = reader.result;
+				let label = document.getElementById("photo_content");
+				label.style = `
+					background: url(${dataURL});
+    				background-size: cover;
+    				background-position: 0%;
+				`;
+			};
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		const added_images_preview = async (event) => {
+			let input = event.target;
+			let reader = new FileReader();
+			
+			reader.onload = () => {
+				let url = reader.result;
+				let main_dom = document.querySelector('.images-added');
+				let dom_preview = document.getElementById("image_added_preview");
+				let dom_label = document.getElementById('image_added_label');
+
+				dom_preview.style = `
+				background: url(${url});
+    			background-size: cover;
+				`;
+				dom_label.textContent = input.files[0].name;
+				main_dom.style.display = 'flex';
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+	</script>
+</body>
+</html>
